@@ -17,7 +17,8 @@ env:
   WORKDIR:   ${{ github.workspace }}
   COVERITY_SCAN_NOTIFICATION_EMAIL:  ${{ secrets.COVERITY_SCAN_NOTIFICATION_EMAIL }}
   COVERITY_SCAN_TOKEN:               ${{ secrets.COVERITY_SCAN_TOKEN }}
-  COVERITY_SCAN_PROJECT_NAME:        $GITHUB_REPOSITORY
+  COVERITY_SCAN_PROJECT_NAME:        ${{ github.repository }}
+  COVERITY_SCAN_BUILD_COMMAND:       "make"
 
 jobs:
   linux:
@@ -42,7 +43,9 @@ jobs:
       - name: Generate source from spec, check for uncommitted diff
         run: |
           cmake --build $WORKDIR/build --target check-generated
-          echo $COVERITY_SCAN_PROEJRCT_NAME
+          echo $COVERITY_SCAN_PROJECT_NAME
+          echo $COVERITY_SCAN_BUILD_COMMAND
+          echo "----------------------------- XXX"
 
       # coverity workflow should just reuse (pull) the most recent, available image
       #- name: Run the build
