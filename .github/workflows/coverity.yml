@@ -1,4 +1,8 @@
-
+#
+# Copyright (C) 2023 Intel Corporation
+#
+# SPDX-License-Identifier: MIT
+#
 name: unified-runtime-coverity
 # It runs static analysis build - Coverity. It requires special token (set in CI's secret).
 
@@ -13,6 +17,7 @@ env:
   WORKDIR:   ${{ github.workspace }}
   COVERITY_SCAN_NOTIFICATION_EMAIL:  ${{ secrets.COVERITY_SCAN_NOTIFICATION_EMAIL }}
   COVERITY_SCAN_TOKEN:               ${{ secrets.COVERITY_SCAN_TOKEN }}
+  COVERITY_SCAN_PROJECT_NAME:        $GITHUB_REPOSITORY
 
 jobs:
   linux:
@@ -35,7 +40,9 @@ jobs:
         run: cmake -B $WORKDIR/build -DUR_ENABLE_TRACING=ON -DUR_DEVELOPER_MODE=ON -DUR_BUILD_TESTS=ON -DUR_FORMAT_CPP_STYLE=ON
 
       - name: Generate source from spec, check for uncommitted diff
-        run: cmake --build $WORKDIR/build --target check-generated
+        run: |
+          cmake --build $WORKDIR/build --target check-generated
+          echo $COVERITY_SCAN_PROEJRCT_NAME
 
       # coverity workflow should just reuse (pull) the most recent, available image
       #- name: Run the build
