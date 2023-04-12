@@ -19,6 +19,9 @@ env:
   COVERITY_SCAN_TOKEN:               ${{ secrets.COVERITY_SCAN_TOKEN }}
   COVERITY_SCAN_PROJECT_NAME:        ${{ github.repository }}
   COVERITY_SCAN_BUILD_COMMAND:       "make"
+  COVERITY_SCAN_BRANCH_PATTERN:      "ur-coverity-setup"
+  TRAVIS_BRANCH:                     "ur-coverity-setup"
+  TRAVIS_PULL_REQUEST:               "false"
 
 jobs:
   linux:
@@ -46,6 +49,14 @@ jobs:
           echo $COVERITY_SCAN_PROJECT_NAME
           echo $COVERITY_SCAN_BUILD_COMMAND
           echo "----------------------------- XXX"
+      - name: Run Coverity
+        run: |
+          cd $WORKDIR/build
+          pwd
+          wget https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh
+          #patch < ../.github/scripts/0001-travis-fix-travisci_build_coverity_scan.sh.patch
+          bash ./travisci_build_coverity_scan.sh
+
 
       # coverity workflow should just reuse (pull) the most recent, available image
       #- name: Run the build
