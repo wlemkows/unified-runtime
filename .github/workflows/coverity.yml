@@ -52,9 +52,15 @@ jobs:
       - name: Run Coverity
         run: |
           cd $WORKDIR/build
+          echo "-----HIM"
           pwd
+          echo "-----HIM"
           wget https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh
-          #patch < ../.github/scripts/0001-travis-fix-travisci_build_coverity_scan.sh.patch
+          echo "-----HIM"
+          ls
+          pwd
+          echo "-----HIM"
+          patch < "../.github/scripts/0001-travis-fix-travisci_build_coverity_scan.sh.patch"
           bash ./travisci_build_coverity_scan.sh
 
 
