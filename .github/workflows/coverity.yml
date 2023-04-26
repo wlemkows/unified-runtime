@@ -6,10 +6,11 @@
 name: unified-runtime-coverity
 # It runs static analysis build - Coverity. It requires special token (set in CI's secret).
 
-on: [push, pull_request]
-  # schedule:
+on:
+  workflow_dispatch:
+  schedule:
     # run this job at 00:00 UTC everyday
-    # - cron:  '0 0 * * *'
+    - cron:  '0 0 * * *'
 
 env:
   REPO:           unified-runtime
@@ -19,8 +20,8 @@ env:
   COVERITY_SCAN_TOKEN:               ${{ secrets.COVERITY_SCAN_TOKEN }}
   COVERITY_SCAN_PROJECT_NAME:        ${{ github.repository }}
   COVERITY_SCAN_BUILD_COMMAND:       "make"
-  COVERITY_SCAN_BRANCH_PATTERN:      "ur-coverity-setup"
-  TRAVIS_BRANCH:                     "ur-coverity-setup"
+  COVERITY_SCAN_BRANCH_PATTERN:      "main"
+  TRAVIS_BRANCH:                     "main"
   TRAVIS_PULL_REQUEST:               "false"
 
 jobs:
@@ -62,9 +63,3 @@ jobs:
           echo "-----HIM"
           patch < "../.github/scripts/0001-travis-fix-travisci_build_coverity_scan.sh.patch"
           bash ./travisci_build_coverity_scan.sh
-
-
-      # coverity workflow should just reuse (pull) the most recent, available image
-      #- name: Run the build
-      # run: cd $WORKDIR && ${{ matrix.CONFIG }} ./build.sh
-
