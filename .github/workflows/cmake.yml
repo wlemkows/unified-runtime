@@ -20,6 +20,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y doxygen ${{matrix.compiler.c}}
+        echo ${{github.sha.short}}
 
     - name: Install pip packages
       run: pip install -r third_party/requirements.txt
@@ -32,6 +33,12 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build
+
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: Unified-Runtime-Linux-${{matrix.compiler.c}}
+        path: ${{github.workspace}}/build
 
     - name: Test
       working-directory: ${{github.workspace}}/build
@@ -60,6 +67,14 @@ jobs:
     - name: Build all
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: Unified-Runtime-Windows
+        path: ${{github.workspace}}/build
+  
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure -L "python|uma|loader|validation|tracing|unit|urtrace"
+
+    
