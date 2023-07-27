@@ -12,6 +12,7 @@ jobs:
         compiler: [{c: gcc, cxx: g++}]
         libbacktrace: ['-DVAL_USE_LIBBACKTRACE_BACKTRACE=OFF']
         pool_tracking: ['-DUMF_ENABLE_POOL_TRACKING=ON', '-DUMF_ENABLE_POOL_TRACKING=OFF']
+        sanitizer: ['-DUR_USE_ASAN=ON', '-DUR_USE_ASAN=OFF']
         include:
           - os: 'ubuntu-22.04'
             build_type: Release
@@ -77,6 +78,7 @@ jobs:
         -DUR_DPCXX=${{github.workspace}}/dpcpp_compiler/bin/clang++
         ${{matrix.libbacktrace}}
         ${{matrix.pool_tracking}}
+        ${{matrix.sanitizer}}
 
     - name: Generate source from spec, check for uncommitted diff
       if: matrix.os == 'ubuntu-22.04'
