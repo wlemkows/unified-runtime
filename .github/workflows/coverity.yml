@@ -83,6 +83,7 @@ jobs:
     - name: Build all
       run: cmake --build $WORKDIR/build --config Release -j 2
 
+
     - name: Run Coverity
       run: |
         cd $WORKDIR/build
