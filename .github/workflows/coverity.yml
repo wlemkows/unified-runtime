@@ -87,5 +87,5 @@ jobs:
     - name: Run Coverity
       run: |
         cd $WORKDIR/build
-        wget https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh
+        iwr https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh
         bash ./travisci_build_coverity_scan.sh
