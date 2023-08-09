@@ -87,5 +87,4 @@ jobs:
       run: |
         cd $WORKDIR/build
         wget https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh
-        patch < "../.github/scripts/0001-travis-fix-travisci_build_coverity_scan.sh.patch"
         bash ./travisci_build_coverity_scan.sh
