@@ -24,7 +24,7 @@ env:
 
 jobs:
   linux:
-    name: Coverity
+    name: Coverity Linux
     runs-on: ubuntu-latest
 
     steps:
@@ -45,6 +45,44 @@ jobs:
       - name: Generate source from spec, check for uncommitted diff
         run: |
           cmake --build $WORKDIR/build --target check-generated
+
+      - name: Run Coverity
+        run: |
+          cd $WORKDIR/build
+          wget https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh
+          patch < "../.github/scripts/0001-travis-fix-travisci_build_coverity_scan.sh.patch"
+          bash ./travisci_build_coverity_scan.sh
+
+    windows:
+      name: Coverity Windows
+      runs-on: windows-2022
+
+      steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install prerequisites
+        run: python3 -m pip install -r third_party/requirements.txt
+
+      - name: Configure CMake
+        run: >
+          cmake
+          -B $WORKDIR/build
+          -DCMAKE_POLICY_DEFAULT_CMP0094=NEW
+          -DUR_ENABLE_TRACING=ON
+          -DUR_DEVELOPER_MODE=ON
+          -DUR_BUILD_TESTS=ON
+          -DUR_FORMAT_CPP_STYLE=ON
+
+      - name: Generate source from spec, check for uncommitted diff
+        run: cmake --build $WORKDIR/build --target check-generated --config Release
+
+      - name: Build all
+        run: cmake --build $WORKDIR/build --config Release -j 2
+
       - name: Run Coverity
         run: |
           cd $WORKDIR/build
