@@ -61,7 +61,7 @@ jobs:
           -DUR_SYCL_LIBRARY_DIR=${{github.workspace}}/dpcpp_compiler/lib
           -DUMF_ENABLE_POOL_TRACKING=ON
           -DUR_BUILD_ADAPTER_L0=ON
-          -DUR_BUILD_ADAPTER_OPENCL=ON
+          -DUR_BUILD_ADAPTER_CUDA=ON
           -DVAL_USE_LIBBACKTRACE_BACKTRACE=ON
 
       - name: Run Coverity
