@@ -57,8 +57,6 @@ jobs:
           -DUR_ENABLE_TRACING=ON
           -DUR_DEVELOPER_MODE=ON
           -DUR_BUILD_TESTS=ON
-          -DUR_DPCXX=${{github.workspace}}/dpcpp_compiler/bin/clang++
-          -DUR_SYCL_LIBRARY_DIR=${{github.workspace}}/dpcpp_compiler/lib
           -DUMF_ENABLE_POOL_TRACKING=ON
           -DUR_FORMAT_CPP_STYLE=ON
           -DUR_BUILD_ADAPTER_L0=ON
