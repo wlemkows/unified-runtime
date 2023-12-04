@@ -73,3 +73,7 @@ jobs:
           wget https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh
           patch < "../.github/scripts/0001-travis-fix-travisci_build_coverity_scan.sh.patch"
           bash ./travisci_build_coverity_scan.sh
+
+      - name: Cat logs
+        run: |
+          cat "/home/runner/work/unified-runtime/unified-runtime/build/cov-int/build-log.txt"
