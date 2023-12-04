@@ -34,8 +34,38 @@ jobs:
       - name: Install pip packages
         run: pip install -r third_party/requirements.txt
 
+      - name: Install libbacktrace
+        if: matrix.libbacktrace == '-DVAL_USE_LIBBACKTRACE_BACKTRACE=ON'
+        run: |
+          git clone https://github.com/ianlancetaylor/libbacktrace.git
+          cd libbacktrace
+          ./configure
+          make
+          sudo make install
+          cd ..
+
+      - name: Download DPC++
+        run: |
+          sudo apt install libncurses5
+          wget -O ${{github.workspace}}/dpcpp_compiler.tar.gz https://github.com/intel/llvm/releases/download/sycl-nightly%2F20230626/dpcpp-compiler.tar.gz
+          tar -xvf ${{github.workspace}}/dpcpp_compiler.tar.gz
+
+      - name: Setup DPC++
+        run: |
+          source ${{github.workspace}}/dpcpp_compiler/startup.sh
+
       - name: Configure CMake
-        run: cmake -B $WORKDIR/build -DUR_ENABLE_TRACING=ON -DUR_DEVELOPER_MODE=ON -DUR_BUILD_TESTS=ON -DUMF_ENABLE_POOL_TRACKING=ON -DUR_BUILD_ADAPTER_L0=ON
+        run: >
+          cmake
+          -B $WORKDIR/build
+          -DUR_ENABLE_TRACING=ON
+          -DUR_DEVELOPER_MODE=ON
+          -DUR_BUILD_TESTS=ON
+          -DUR_DPCXX=${{github.workspace}}/dpcpp_compiler/bin/clang++
+          -DUR_SYCL_LIBRARY_DIR=${{github.workspace}}/dpcpp_compiler/lib
+          -DUMF_ENABLE_POOL_TRACKING=ON
+          -DUR_BUILD_ADAPTER_L0=ON
+          -DVAL_USE_LIBBACKTRACE_BACKTRACE=ON
 
       - name: Run Coverity
         run: |
