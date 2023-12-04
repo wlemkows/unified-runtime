@@ -46,13 +46,9 @@ jobs:
 
       - name: Download DPC++
         run: |
-          sudo apt install libncurses5
-          wget -O ${{github.workspace}}/dpcpp_compiler.tar.gz https://github.com/intel/llvm/releases/download/sycl-nightly%2F20230626/dpcpp-compiler.tar.gz
-          tar -xvf ${{github.workspace}}/dpcpp_compiler.tar.gz
-
-      - name: Setup DPC++
-        run: |
-          source ${{github.workspace}}/dpcpp_compiler/startup.sh
+          wget -O ${{github.workspace}}/dpcpp_compiler.tar.gz https://github.com/intel/llvm/releases/download/nightly-2023-09-21/sycl_linux.tar.gz
+          mkdir dpcpp_compiler
+          tar -xvf ${{github.workspace}}/dpcpp_compiler.tar.gz -C dpcpp_compiler
 
       - name: Configure CMake
         run: >
@@ -65,6 +61,7 @@ jobs:
           -DUR_SYCL_LIBRARY_DIR=${{github.workspace}}/dpcpp_compiler/lib
           -DUMF_ENABLE_POOL_TRACKING=ON
           -DUR_BUILD_ADAPTER_L0=ON
+          -DUR_BUILD_ADAPTER_OPENCL=ON
           -DVAL_USE_LIBBACKTRACE_BACKTRACE=ON
 
       - name: Run Coverity
