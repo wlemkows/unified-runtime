@@ -35,7 +35,7 @@ jobs:
         run: pip install -r third_party/requirements.txt
 
       - name: Configure CMake
-        run: cmake -B $WORKDIR/build -DUR_ENABLE_TRACING=ON -DUR_DEVELOPER_MODE=ON -DUR_BUILD_TESTS=ON -DUMF_ENABLE_POOL_TRACKING=ON
+        run: cmake -B $WORKDIR/build -DUR_ENABLE_TRACING=ON -DUR_DEVELOPER_MODE=ON -DUR_BUILD_TESTS=ON -DUMF_ENABLE_POOL_TRACKING=ON -DUR_BUILD_ADAPTER_L0=ON
 
       - name: Run Coverity
         run: |
