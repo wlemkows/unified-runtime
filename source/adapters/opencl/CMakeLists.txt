@@ -72,7 +72,7 @@ else()
             GIT_TAG         main
         )
         FetchContent_MakeAvailable(OpenCL-ICD-Loader)
-        set(OpenCLICDLoaderLibrary ${PROJECT_BINARY_DIR}/lib/libOpenCL.so)
+        #set(OpenCLICDLoaderLibrary ${PROJECT_BINARY_DIR}/lib/libOpenCL.so)
     endif()
 endif()
 
