@@ -9,6 +9,7 @@ on:
   branch_protection_rule:
   # To guarantee Maintained check is occasionally updated. See
   # https://github.com/ossf/scorecard/blob/main/docs/checks.md#maintained
+  workflow_dispatch:
   schedule:
     - cron: '24 21 * * 4'
   push:
