@@ -5,6 +5,9 @@ on:
     # Run every day at 23:00 UTC
     - cron: '0 23 * * *'
 
+permissions:
+  contents: read
+
 jobs:
   e2e-build-hw:
     name: Build SYCL, UR, run E2E
@@ -21,6 +24,11 @@ jobs:
     steps:
     # Workspace on self-hosted runners is not cleaned automatically.
     # We have to delete the files created outside of using actions.
+    - name: Harden Runner
+      uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+      with:
+        egress-policy: audit
+
     - name: Cleanup self-hosted workspace
       if: always()
       run: |
@@ -28,12 +36,12 @@ jobs:
         rm -rf ./* || true
 
     - name: Checkout UR
-      uses: actions/checkout@v4
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       with:
         path: ur-repo
 
     - name: Checkout SYCL
-      uses: actions/checkout@v4
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       with:
         repository: intel/llvm
         ref: sycl
