@@ -1,9 +1,29 @@
-name: E2E Nightly
+name: E2E build & run
 
 on:
-  schedule:
-    # Run every day at 23:00 UTC
-    - cron: '0 23 * * *'
+  # this workflow can by only triggered by other workflows
+  # for example by: e2e_cuda.yml or e2e_opencl.yml
+  workflow_call:
+    # acceptable input from adapter-specific workflows
+    inputs:
+      name:
+        type: string
+        required: true
+      str_name:
+        type: string
+        required: true
+      prefix:
+        type: string
+        required: true
+      config:
+        type: string
+        required: true
+      unit:
+        type: string
+        required: true
+      runner_tag:
+        type: string
+        required: true
 
 permissions:
   contents: read
@@ -14,13 +34,16 @@ jobs:
     strategy:
       matrix:
         adapter: [
-          {name: CUDA, str_name: cuda, prefix: "ext_oneapi_", config: "--cuda --hip", unit: "gpu"},
-          {name: OPENCL, str_name: opencl, prefix: "", config: "", unit: "cpu"}
+          {name: "${{inputs.name}}",
+          str_name: "${{inputs.str_name}}",
+          prefix: "${{inputs.prefix}}",
+          config: "${{inputs.config}}",
+          unit: "${{inputs.unit}}"}
         ]
         build_type: [Release]
         compiler: [{c: clang, cxx: clang++}]
 
-    runs-on: ${{matrix.adapter.name}}
+    runs-on: ${{inputs.runner_tag}}
 
     steps:
     # Workspace on self-hosted runners is not cleaned automatically.
