@@ -1,0 +1,21 @@
+name: E2E Cuda
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e-build-hw:
+    name: Start e2e job
+    uses: ./.github/workflows/e2e_core.yml
+    with:
+      name: "CUDA"
+      runner_tag: "CUDA_E2E"
+      str_name: "cuda"
+      prefix: "ext_oneapi_"
+      config: "--cuda"
+      unit: "gpu"
