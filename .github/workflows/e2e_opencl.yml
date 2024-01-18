@@ -1,0 +1,22 @@
+name: E2E OpenCL
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run every day at 23:00 UTC
+    - cron: '0 23 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  e2e-build-hw:
+    name: Start e2e job
+    uses: ./.github/workflows/e2e_core.yml
+    with:
+      name: "OPENCL"
+      runner_tag: "OPENCL"
+      str_name: "opencl"
+      prefix: ""
+      config: ""
+      unit: "cpu"
