@@ -20,7 +20,8 @@ jobs:
     #  prefix: "ext_oneapi_"
     #  config: "--cuda"
     #  unit: "gpu"
-
+    
+    runs-on: 'ubuntu-22.04'
     steps:
     - name: TEST
       run: |
