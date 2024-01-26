@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   e2e-build-hw:
-    if: ${{ contains(github.event.head_commit.message, 'test-e2e') }}
+    if: contains(github.event.head_commit.message, 'test-e2e')
     name: Start e2e job
     #uses: ./.github/workflows/e2e_core.yml
     #with:
@@ -20,10 +20,17 @@ jobs:
     #  prefix: "ext_oneapi_"
     #  config: "--cuda"
     #  unit: "gpu"
-    
-    runs-on: 'ubuntu-22.04'
+
     steps:
     - name: TEST
       run: |
         echo "YYY ${{github.event.head_commit.message}}"
+
+    - name: Get Commit Message
+      run: |
+        MSG=$(git log --format=%B -n 1 ${{github.event.after}})
+        echo "::set-env name=COMMIT_MESSAGE::${MSG}"
+
+    - name: Echo commit message
+      run: echo "Commit SHA: ${{github.event.after}}, commit message: ${{env.COMMIT_MESSAGE}} (or ${COMMIT_MESSAGE})"
 
