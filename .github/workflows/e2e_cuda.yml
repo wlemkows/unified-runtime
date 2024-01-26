@@ -33,4 +33,3 @@ jobs:
 
     - name: Echo commit message
       run: echo "Commit SHA: ${{github.event.after}}, commit message: ${{env.COMMIT_MESSAGE}} (or ${COMMIT_MESSAGE})"
-
