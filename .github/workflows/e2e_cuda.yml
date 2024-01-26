@@ -12,13 +12,17 @@ jobs:
   e2e-build-hw:
     if: contains(github.event.head_commit.message, 'test-e2e')
     name: Start e2e job
-    run: |
-      echo "YYY ${{github.event.head_commit.message}}"
-    uses: ./.github/workflows/e2e_core.yml
-    with:
-      name: "CUDA"
-      runner_tag: "CUDA_E2E"
-      str_name: "cuda"
-      prefix: "ext_oneapi_"
-      config: "--cuda"
-      unit: "gpu"
+    #uses: ./.github/workflows/e2e_core.yml
+    #with:
+    #  name: "CUDA"
+    #  runner_tag: "CUDA_E2E"
+    #  str_name: "cuda"
+    #  prefix: "ext_oneapi_"
+    #  config: "--cuda"
+    #  unit: "gpu"
+
+    steps:
+    - name: TEST
+      run: |
+        echo "YYY ${{github.event.head_commit.message}}"
+
