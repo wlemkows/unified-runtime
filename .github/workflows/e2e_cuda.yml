@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   e2e-build-hw:
-    if: contains(github.event.head_commit.message, 'test-e2e')
+    if: contains(github.event.pull_request.title, 'test-e2e')
     name: Start e2e job
     #uses: ./.github/workflows/e2e_core.yml
     #with:
@@ -24,7 +24,7 @@ jobs:
     steps:
     - name: TEST
       run: |
-        echo "YYY ${{github.event.head_commit.message}}"
+        echo "YYY ${{github.event.pull_request.title}}"
 
     - name: Get Commit Message
       run: |
