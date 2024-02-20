@@ -10,8 +10,8 @@ permissions:
 
 jobs:
   e2e-build-hw:
-    # trigger only if head commit contains "test-e2e"
-    if: ${{ contains(github.event.head_commit.message, 'test-e2e') }}
+    # trigger only if PR comment contains "e2e-cuda"
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/e2e-cuda') }}
     name: Start e2e job
     # use core flow, run it with cuda specific parameters
     uses: ./.github/workflows/e2e_core.yml
