@@ -2,7 +2,7 @@ name: E2E Cuda
 
 on:
   issue_comment:
-    types: [created]
+    types: [created, edited, deleted]
 
 permissions:
   contents: read
