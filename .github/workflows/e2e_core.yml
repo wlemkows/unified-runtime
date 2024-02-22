@@ -45,8 +45,6 @@ jobs:
         compiler: [{c: clang, cxx: clang++}]
 
     runs-on: ${{inputs.runner_tag}}
-    permissions:
-      pull-requests: write
 
     steps:
     # Workspace on self-hosted runners is not cleaned automatically.
