@@ -135,6 +135,11 @@ jobs:
         echo "CUDA_LIB_PATH=/usr/local/cuda/lib64/stubs" >> $GITHUB_ENV
         echo "LD_LIBRARY_PATH=/usr/local/cuda/compat/:/usr/local/cuda/lib64:$LD_LIBRARY_PATH" >> $GITHUB_ENV
 
+    - name: Ccache setup
+      run: |
+        echo "CCACHE_NOHASHDIR=1"
+        echo "CCACHE_BASEDIR=/home/`whoami`/"
+
     - name: Run pre setup
       run: |
         source /opt/intel/oneapi/setvars.sh --force
@@ -153,13 +158,13 @@ jobs:
         --cmake-opt=-DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
     - name: Build SYCL
-      run: cmake --build ${{github.workspace}}/sycl_build
+      run: cmake --build ${{github.workspace}}/sycl_build -j6
 
     - name: Run check-sycl
       # Remove after fixing SYCL test :: abi/layout_handler.cpp
       # This issue does not affect further execution of e2e with UR.
       continue-on-error: true
-      run: cmake --build ${{github.workspace}}/sycl_build --target check-sycl
+      run: cmake --build ${{github.workspace}}/sycl_build --target check-sycl -j6
 
     - name: Swap UR loader and adapters
       run: |
