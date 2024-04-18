@@ -41,7 +41,7 @@ permissions:
 
 jobs:
   e2e-build-hw:
-    if: github.repository == 'oneapi-src/unified-runtime'  # run only on upstream; forks will not have the HW
+    #if: github.repository == 'oneapi-src/unified-runtime'  # run only on upstream; forks will not have the HW
     name: Build SYCL, UR, run E2E
     strategy:
       matrix:
@@ -99,6 +99,15 @@ jobs:
         git checkout origin/pr/${PR_NO}/merge
         git rev-parse origin/pr/${PR_NO}/merge
 
+    - name: Ccache setup
+      run: |
+        echo "CCACHE_NOHASHDIR=1" >> $GITHUB_ENV
+        echo "CCACHE_BASEDIR=/home/`whoami`/" >> $GITHUB_ENV
+
+    - name: Setup UR content location
+        echo "SYCL_PI_UR_USE_FETCH_CONTENT=OFF" >> $GITHUB_ENV
+        echo "SYCL_PI_UR_SOURCE_DIR="${{github.workspace}}/ur-repo/" >> $GITHUB_ENV
+
     - name: Checkout SYCL
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       with:
@@ -109,25 +118,6 @@ jobs:
     - name: Install pip packages
       working-directory: ${{github.workspace}}/ur-repo
       run: pip install -r third_party/requirements.txt
-
-    - name: Configure CMake UR
-      working-directory: ${{github.workspace}}/ur-repo
-      run: >
-        cmake
-        -B build
-        -DCMAKE_C_COMPILER=${{matrix.compiler.c}}
-        -DCMAKE_CXX_COMPILER=${{matrix.compiler.cxx}}
-        -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
-        -DUR_ENABLE_TRACING=ON
-        -DUR_DEVELOPER_MODE=ON
-        -DUR_BUILD_ADAPTER_${{matrix.adapter.name}}=ON
-
-    - name: Build UR
-      run: LD_LIBRARY_PATH=${{github.workspace}}/dpcpp_compiler/lib
-        cmake --build ${{github.workspace}}/ur-repo/build -j $(nproc)
-
-    - name: Set prefer UR
-      run: echo "SYCL_PREFER_UR=1" >> $GITHUB_ENV
 
     - name: Set CUDA env vars
       if: matrix.adapter.name == 'CUDA'
@@ -153,18 +143,13 @@ jobs:
         --cmake-opt=-DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
     - name: Build SYCL
-      run: cmake --build ${{github.workspace}}/sycl_build
+      run: cmake --build ${{github.workspace}}/sycl_build -j6
 
     - name: Run check-sycl
       # Remove after fixing SYCL test :: abi/layout_handler.cpp
       # This issue does not affect further execution of e2e with UR.
       continue-on-error: true
-      run: cmake --build ${{github.workspace}}/sycl_build --target check-sycl
-
-    - name: Swap UR loader and adapters
-      run: |
-        cp ${{github.workspace}}/ur-repo/build/lib/libur_loader.so* ${{github.workspace}}/sycl_build/lib/
-        cp ${{github.workspace}}/ur-repo/build/lib/libur_adapter_${{matrix.adapter.str_name}}.so* ${{github.workspace}}/sycl_build/lib/
+      run: cmake --build ${{github.workspace}}/sycl_build --target check-sycl -j6
 
     - name: Set additional env. vars
       run: |
