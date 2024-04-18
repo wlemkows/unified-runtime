@@ -1,6 +1,7 @@
 name: E2E Cuda
 
 on:
+  push:
   schedule:
     # Run every day at 23:00 UTC
     - cron: '0 23 * * *'
