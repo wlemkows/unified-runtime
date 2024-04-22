@@ -99,6 +99,11 @@ jobs:
         git checkout origin/pr/${PR_NO}/merge
         git rev-parse origin/pr/${PR_NO}/merge
 
+    - name: Ccache setup
+      run: |
+        echo "CCACHE_NOHASHDIR=1" >> $GITHUB_ENV
+        echo "CCACHE_BASEDIR=/home/`whoami`/" >> $GITHUB_ENV
+
     - name: Checkout SYCL
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       with:
@@ -153,13 +158,13 @@ jobs:
         --cmake-opt=-DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
     - name: Build SYCL
-      run: cmake --build ${{github.workspace}}/sycl_build
+      run: cmake --build ${{github.workspace}}/sycl_build -j6
 
     - name: Run check-sycl
       # Remove after fixing SYCL test :: abi/layout_handler.cpp
       # This issue does not affect further execution of e2e with UR.
       continue-on-error: true
-      run: cmake --build ${{github.workspace}}/sycl_build --target check-sycl
+      run: cmake --build ${{github.workspace}}/sycl_build --target check-sycl -j6
 
     - name: Swap UR loader and adapters
       run: |
